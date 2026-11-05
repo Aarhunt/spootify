@@ -128,7 +128,9 @@ func CreatePlaylist(req model.PlaylistCreateRequest) (*model.PlaylistResponse, e
 	ctx, client, user := spotiConn.Ctx, spotiConn.Client, spotiConn.UserID
 	db := src.GetDbConn().Db
 
-	spotPlaylist, err := client.CreatePlaylistForUser(ctx, user, req.Name, "", false, false)
+	prefixedName := req.Prefix + " " + req.Name
+
+	spotPlaylist, err := client.CreatePlaylistForUser(ctx, user, prefixedName, "", false, false)
 
 	if err != nil {
 		log.Fatal(err)
@@ -140,6 +142,7 @@ func CreatePlaylist(req model.PlaylistCreateRequest) (*model.PlaylistResponse, e
 		Inclusions:        []model.IdItem{},
 		IncludedPlaylists: []*model.Playlist{},
 		Exclusions:        []model.IdItem{},
+		Prefix: 		   req.Prefix,
 		Changed: 		   true,
 	}
 
