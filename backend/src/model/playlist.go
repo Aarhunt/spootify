@@ -6,11 +6,13 @@ type Playlist struct {
 	Inclusions        []IdItem   `gorm:"many2many:playlist_inclusions;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	IncludedPlaylists []*Playlist `gorm:"many2many:playlist_nested_playlists;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Exclusions        []IdItem   `gorm:"many2many:playlist_exclusions;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Prefix 			  string `json:"prefix"`
 	Changed 		  bool  `json:"changed"`
 }
 
 type PlaylistCreateRequest struct {
 	Name string `json:"name" binding:"required" example:"My Playlist"`
+	Prefix string `json:"prefix" binding:"required" example:"[S]"`
 }
 
 type PlaylistPublishRequest struct {
@@ -20,12 +22,14 @@ type PlaylistPublishRequest struct {
 type PlaylistResponse struct {
 	Name              string `json:"name"`
 	SpotifyID         string `json:"spotifyID"`
+	Prefix			  string `json:"prefix"`
 }
 
 func (p Playlist) ToResponse() *PlaylistResponse {
 	return &PlaylistResponse{
 		Name:              p.Name,
 		SpotifyID:         p.SpotifyID,
+		Prefix:			   p.Prefix,
 	}
 }
 

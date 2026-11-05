@@ -152,10 +152,9 @@ export const usePlaylistStore = create<PlaylistState>((set, get) => ({
 
     createPlaylist: async (name: string) => {
         set({ selectionLoading: true });
-        const prefixName = get().playlistPrefix + " " + name
         try {
             const response = await postPlaylist({
-                body: { name: prefixName }
+                body: { name: name, prefix: get().playlistPrefix }
             });
 
             if (response.data) {
@@ -240,7 +239,7 @@ export const usePlaylistStore = create<PlaylistState>((set, get) => ({
         try {
             const response = await putPlaylistByIdRename({
                 path: { id: id },
-                body: { name }
+                body: { name , prefix: get().playlistPrefix}
             });
 
             if (response.data) {

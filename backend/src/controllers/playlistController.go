@@ -92,7 +92,7 @@ func RenamePlaylist(c *gin.Context) {
         return
     }
 
-    rowsAffected, err := services.RenamePlaylist(playlistID, req.Name)
+    rowsAffected, err := services.RenamePlaylist(playlistID, req.Name, req.Prefix)
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update database", "details": err.Error()})
         return

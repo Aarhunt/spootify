@@ -62,6 +62,7 @@ export type ModelItemType = 0 | 1 | 2 | 3;
 
 export type ModelPlaylistCreateRequest = {
     name: string;
+    prefix: string;
 };
 
 export type ModelPlaylistInclusionResponse = {
@@ -76,6 +77,7 @@ export type ModelPlaylistPublishRequest = {
 export type ModelPlaylistResponse = {
     name?: string;
     spotifyID?: string;
+    prefix?: string;
 };
 
 export type ModelSearchRequest = {

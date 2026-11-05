@@ -266,6 +266,7 @@ export function CreateDialog() {
     const [includedArtist, setIncludedArtist] = React.useState("");
     const [customGenre, setCustomGenre] = React.useState("");
     const [creating, setCreating] = React.useState(false);
+    const [finishDialog, setFinishDialog] = React.useState(false);
     const inputId = React.useId();
 
     const { playlistSelectionData, summary, setCurrentPlaylist, publishPlaylist } = usePlaylistStore();
@@ -314,9 +315,11 @@ export function CreateDialog() {
 
     const handleFinishDialog = async () => {
         setCurrentPlaylist(newPlaylistId, playlistName)
+        setFinishDialog(true);
         await publishPlaylist()
         await summary()
         resetDialog()
+        setFinishDialog(false);
         setOpen(false)
     }
 
@@ -512,7 +515,7 @@ export function CreateDialog() {
                                 onClick={() => handleFinishDialog()}
                                 className="bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold px-8 rounded-full transition-all"
                             >
-                                Done
+                                {finishDialog ? <Spinner className="text-black" /> : "Done"}
                             </Button>
                         </DialogFooter>
                     </>

@@ -109,13 +109,13 @@ func DeletePlaylist(id string) *gorm.DB {
 // RenamePlaylist
 // Renames a single playlist by id
 // Returns amount of lists updated, and error
-func RenamePlaylist(id string, name string) (int, error) {
+func RenamePlaylist(id string, name string, prefix string) (int, error) {
 	dbConn := src.GetDbConn()
 	ctx, db := dbConn.Ctx, dbConn.Db
 
 	client := src.GetSpotifyConn().Client
 
-	client.ChangePlaylistName(ctx, model.ToSpotifyID(id), name)
+	client.ChangePlaylistName(ctx, model.ToSpotifyID(id), prefix + " " + name)
 
 	return gorm.G[model.Playlist](db).Where("spotify_id = ?", id).Update(ctx, "name", name)
 }
@@ -128,7 +128,9 @@ func CreatePlaylist(req model.PlaylistCreateRequest) (*model.PlaylistResponse, e
 	ctx, client, user := spotiConn.Ctx, spotiConn.Client, spotiConn.UserID
 	db := src.GetDbConn().Db
 
-	spotPlaylist, err := client.CreatePlaylistForUser(ctx, user, req.Name, "", false, false)
+	prefixedName := req.Prefix + " " + req.Name
+
+	spotPlaylist, err := client.CreatePlaylistForUser(ctx, user, prefixedName, "", false, false)
 
 	if err != nil {
 		log.Fatal(err)
@@ -140,6 +142,7 @@ func CreatePlaylist(req model.PlaylistCreateRequest) (*model.PlaylistResponse, e
 		Inclusions:        []model.IdItem{},
 		IncludedPlaylists: []*model.Playlist{},
 		Exclusions:        []model.IdItem{},
+		Prefix: 		   req.Prefix,
 		Changed: 		   true,
 	}
 
