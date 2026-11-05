@@ -159,7 +159,6 @@ export const usePlaylistStore = create<PlaylistState>((set, get) => ({
             });
 
             if (response.data) {
-                response.data.name = name
                 set((state) => ({
                     playlistSelectionData: [...state.playlistSelectionData, response.data],
                     selectionLoading: false,
